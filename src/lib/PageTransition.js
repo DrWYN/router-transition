@@ -42,14 +42,15 @@ export default class PageTransition extends React.Component {
   }
 
   componentDidMount() {
+    console.log('--->>>>>did', 22);
     if (!this.props.animateOnInit) {
       const child = this.getRef('child1');
       if (child) {
         const dom = ReactDom.findDOMNode(child);
         child.onTransitionDidEnd && child.onTransitionDidEnd(this.props.data);
-        dom.classList.remove('transition-item');
+          dom && dom.classList.remove('transition-item');
         if (this.hasTransitionAction()) {
-          dom.classList.remove(`transition-${this.props.transitionAction}`);
+          dom && dom.classList.remove(`transition-${this.props.transitionAction}`);
         }
       }
     } else {
@@ -58,9 +59,9 @@ export default class PageTransition extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('--->>>nextProps', nextProps)
     const {history = {}} = nextProps;
     const {action} = history;
+    console.log('--->>>nextProps', nextProps, action)
     const transitNewChild = () => {
       this.queue.add(() => this.transite(nextProps.children, action));
     };
@@ -110,6 +111,7 @@ export default class PageTransition extends React.Component {
 
         // Before add appear class
         const willStart = () => {
+          if (!newChildDom) return Promise.reject('no child dom');
           if (isAppear && newChild.onTransitionWillStart) {
             return (
               newChild.onTransitionWillStart(this.props.data) ||

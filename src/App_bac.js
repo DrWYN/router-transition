@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import Loadable from 'react-loadable';
-import AnimatedRouter from './lib/AnimatedRouter.js';
+import PageTransition from "./lib/PageTransition.js";
 
 const Loading = (props) => {
   if (props.error) {
@@ -43,11 +43,16 @@ class App extends Component {
       <Router>
         <Route
           render={({ location, history }) => (
-              <AnimatedRouter location={location} timeout={300}>
+            <PageTransition 
+              timeout={500} 
+              animateOnInit={false}
+              history={history}>
+              <Switch location={location}>
                 <Route exact path="/" component={AsyncList} />
                 {/* <Route path="/list" component={List}/> */}
-                <Route path="/item/:id?" component={AsyncItem} />
-              </AnimatedRouter>
+                <Route path="/item" component={AsyncItem} />
+              </Switch>
+            </PageTransition>
           )}
         />
       </Router>
